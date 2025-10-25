@@ -19,7 +19,7 @@ inputs:
   REPOSITORY:
     description: 'REPOSITORY where the action is executed.'
     required: true
-  issue_label:
+  LABEL:
     description: 'Label assigned to GitHub issues that should trigger code generation.'
     required: true
     default: 'autocoder-bot'
@@ -75,4 +75,4 @@ runs:
         author: autocoder-bot <actions@github.com>
         branch: "autocoder-branch-${{ inputs.ISSUE_NUMBER }}"
         base: main
-        labels: ${{ inputs.issue_label }}
+        labels: ${{ inputs.LABEL }}
