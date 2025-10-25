@@ -1,54 +1,42 @@
 name: Autocoder Bot
 
-# Run this workflow when an issue is opened or edited
 on:
   issues:
-    types: [opened, edited]
+    types: [opened, reopened, labeled]
 
 jobs:
-  generate-code:
-    # Objective: Run only if the issue has the 'autocoder-bot' label
+  generate_code:
+    # if: contains(join(github.event.issue.labels.*.name, ','), 'autocoder-bot')
     if: contains(github.event.issue.labels.*.name, 'autocoder-bot')
-    
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Objective: Make the script file executable
-      # Note: This assumes your script is named 'script.sh'
-      # If you named it 'script.sh', change the filename below.
-      - name: Set permissions for script.sh
-        run: chmod +x ./script.sh
+      - name: Give execute permission to script
+        run: chmod +x script.sh
 
-      # Objective: Run the script and pass the necessary environment variables
-      - name: Run script.sh
+      - name: Generate code using ChatGPT
         env:
-          # Arg 1: GITHUB_TOKEN
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Arg 2: REPOSITORY
-          REPO: ${{ github.repository }}
-          # Arg 3: ISSUE_NUMBER
-          ISSUE_NUM: ${{ github.event.issue.number }}
-          # Arg 4: OPENAI_API_KEY
-          OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: ./script.sh "$GH_TOKEN" "$REPO" "$ISSUE_NUM" "$OPENAI_KEY"
-
-      # Objective: Upload the content as an artifact
-      - name: Upload generated files as artifacts
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          ./script.sh "${ISSUE_NUMBER}" "${REPOSITORY}" "${GITHUB_TOKEN}" "${OPENAI_API_KEY}"
+      - name: Upload autocoder output
         uses: actions/upload-artifact@v4
         with:
           name: autocoder-artifact
-          path: autocoder-bot/  # The script saves files to this directory
+          path: autocoder-bot/
 
-      # Objective: Download the artifact
-      - name: Download artifacts
+      - name: Download autocoder artifact
         uses: actions/download-artifact@v4
         with:
           name: autocoder-artifact
-          path: autocoder-artifact/  # Download to this directory
+          path: autocoder-artifact/
 
-      # Objective: List all files recursively
-      - name: List files in the artifact
-        run: ls -R autocoder-artifact/
+      - name: Display generated files
+        run: ls -R autocoder-artifact
+
