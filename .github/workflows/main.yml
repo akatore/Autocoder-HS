@@ -25,7 +25,7 @@ jobs:
       # Objective: Make the script file executable
       # Note: Change 'gpt_interaction_script.sh' if your script has a different name
       - name: Set permissions for script.sh
-        run: chmod +x ./gpt_interaction_script.sh
+        run: chmod +x ./scripts/script.sh
 
       # Objective: Run the script and pass environment variables
       - name: Run script.sh
@@ -34,7 +34,7 @@ jobs:
           REPO: ${{ github.repository }}
           ISSUE_NUM: ${{ github.event.issue.number }}
           OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: ./gpt_interaction_script.sh "$GH_TOKEN" "$REPO" "$ISSUE_NUM" "$OPENAI_KEY"
+        run: ./scripts/script.sh.sh "$GH_TOKEN" "$REPO" "$ISSUE_NUM" "$OPENAI_KEY"
 
       # Objective: Configure git user
       - name: Configure git
@@ -68,4 +68,5 @@ jobs:
           
           # Labels for the PR
           labels: autocoder-bot
+
 
