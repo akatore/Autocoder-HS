@@ -27,7 +27,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          ./script.sh "${ISSUE_NUMBER}" "${REPOSITORY}" "${GITHUB_TOKEN}" "${OPENAI_API_KEY}"
+          ./script.sh "${GITHUB_TOKEN}" "${REPOSITORY}" "${ISSUE_NUMBER}" "${OPENAI_API_KEY}"
 
       - name: Upload autocoder output
         uses: actions/upload-artifact@v4
@@ -43,6 +43,7 @@ jobs:
 
       - name: Display generated files
         run: ls -R autocoder-artifact
+
 
 
 
