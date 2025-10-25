@@ -1,42 +1,45 @@
-name: Access Issue Information
+name: Autocoder Bot
 
 on:
   issues:
-    types: [opened, reopened]   # Trigger when a new issue is opened or reopened
+    types: [opened, reopened, labeled]
 
 jobs:
-  access_issue_info:
+  generate_code:
+    if: contains(github.event.issue.labels.*.name, 'autocoder-bot')
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
+      # Objective: Make the script file executable
+      # Note: This assumes your script is named 'gpt_interaction_script.sh'
+      # If you named it 'script.sh', change the filename below.
+      - name: Set permissions for script.sh
+        run: chmod +x scripts/script.sh
 
-      # Step 2: Print issue details
-      - name: Print Issue Information
+      # Objective: Run the script and pass the necessary environment variables
+      - name: Run the script to generate code
         env:
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          ISSUE_TITLE: ${{ github.event.issue.title }}
-          ISSUE_BODY: ${{ github.event.issue.body }}
-          ISSUE_ASSIGNEES: ${{ join(github.event.issue.assignees.*.login, ', ') }}
-          ISSUE_LABELS: ${{ join(github.event.issue.labels.*.name, ', ') }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
-        run: |
-          echo "=== Issue Information ==="
-          echo "Issue Number: ${ISSUE_NUMBER}"
-          echo "Issue Title: ${ISSUE_TITLE}"
-          echo "Issue Body: ${ISSUE_BODY}"
-          echo "Issue Assignees: ${ISSUE_ASSIGNEES}"
-          echo "Issue Labels: ${ISSUE_LABELS}"
-          echo "Repository: ${REPOSITORY}"
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: ./scripts/script.sh "${GITHUB_TOKEN}" "${REPOSITORY}" "${ISSUE_NUMBER}" "${OPENAI_API_KEY}"
 
-      # Step 3: Optional — Retrieve issue details via GitHub API
-      - name: Retrieve Issue Details via GitHub API
-        env:
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          REPOSITORY: ${{ github.repository }}
-        run: |
-          echo "Fetching issue details from GitHub API..."
-          ISSUE_RESPONSE=$(curl -s https://api.github.com/repos/${REPOSITORY}/issues/${ISSUE_NUMBER})
-          echo "Issue Information from API: $ISSUE_RESPONSE"
+      # Objective: Upload the content as an artifact
+      - name: Upload autocoder output
+        uses: actions/upload-artifact@v4
+        with:
+          name: autocoder-artifact
+          path: autocoder-bot/
+          
+      # Objective: Download the artifact
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: autocoder-artifact
+          path: autocoder-artifact/  # Download to this directory
+
+      - name: Display generated files
+        run: ls -R ./autocoder-artifact
