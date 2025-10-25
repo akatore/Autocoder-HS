@@ -19,7 +19,8 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           issue_label: 'autocoder-bot'
-          script_path: './scripts/script.sh'
+          SCRIPT_PATH: './scripts/script.sh'
+
 
 
 
