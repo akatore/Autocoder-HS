@@ -17,10 +17,10 @@ jobs:
         uses: actions/checkout@v4
 
       # Objective: Make the script file executable
-      # Note: This assumes your script is named 'gpt_interaction_script.sh'
+      # Note: This assumes your script is named 'script.sh'
       # If you named it 'script.sh', change the filename below.
       - name: Set permissions for script.sh
-        run: chmod +x ./gpt_interaction_script.sh
+        run: chmod +x ./script.sh
 
       # Objective: Run the script and pass the necessary environment variables
       - name: Run script.sh
@@ -33,7 +33,7 @@ jobs:
           ISSUE_NUM: ${{ github.event.issue.number }}
           # Arg 4: OPENAI_API_KEY
           OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: ./gpt_interaction_script.sh "$GH_TOKEN" "$REPO" "$ISSUE_NUM" "$OPENAI_KEY"
+        run: ./script.sh "$GH_TOKEN" "$REPO" "$ISSUE_NUM" "$OPENAI_KEY"
 
       # Objective: Upload the content as an artifact
       - name: Upload generated files as artifacts
@@ -52,3 +52,4 @@ jobs:
       # Objective: List all files recursively
       - name: List files in the artifact
         run: ls -R autocoder-artifact/
+
