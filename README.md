@@ -45,7 +45,7 @@ jobs:
 
       # Run the Autocoder Bot action
       - name: Run Autocoder Bot
-        uses: YOUR-USERNAME/YOUR-REPOSITORY-NAME@v1 # <-- CHANGE THIS
+        uses: akatore/Autocoder-HS@v1 # <-- CHANGE THIS
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           openai_api_key: ${{ secrets.OPENAI_API_KEY }}
@@ -107,3 +107,4 @@ Before you publish, you should test it.
 
 5.  **Publish (Final Step):**
     Once you see it working, you can **create a release** on GitHub (e.g., `v1.0.0`). This "publishes" your action so others can use it by referencing the tag (like `uses: Your-Username/Your-Repo-Name@v1.0.0`).
+
