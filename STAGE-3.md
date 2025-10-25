@@ -1,17 +1,21 @@
-Use GitHub Actions to interact with the GitHub API to read issues and comments. Accessing issues is made even simpler with the github.event variable in GitHub Actions. This environment variable provides payload information about the event that triggered the workflow. Use this variable to access issue details such as title, body, assignees, and labels and echo them back in the workflow logs. These environment variables include:
+## Interacting with GitHub Issues
 
+## Description
+
+Use GitHub Actions to interact with the GitHub API to read issues and comments. Accessing issues is made even simpler with the github.event variable in GitHub Actions. This environment variable provides payload information about the event that triggered the workflow. Use this variable to access issue details such as title, body, assignees, and labels and echo them back in the workflow logs. These environment variables include:
+```
 Issue Number: ${{ github.event.issue.number }}
 Issue Body: ${{ github.event.issue.body }}
 Issue Assignees: ${{ join(github.event.issue.assignees.*.login, ', ') }}
 Issue Labels: ${{ join(github.event.issue.labels.*.name, ', ') }}
-
+```
 These variables can also be used when creating the URLs needed to interact with the GitHub API. For example, to retrieve the issues, you can use the following commands in your workflow:
-
+```
 ISSUE_NUMBER=${{ github.event.issue.number }}
 ISSUE_RESPONSE=$(curl -s https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER)
 echo "Issue Information: $ISSUE_RESPONSE"
-
-Objectives
+```
+## Objectives
 To pass this stage, perform the following:
 
 Modify the workflow to trigger when a new issue opened and when a closed issue is reopened;
@@ -22,8 +26,8 @@ Set and use environment variables to read the content of the issue that triggere
 
 Echo the content back in the workflow logs - ensure to use distinct echo commands for each issue attribute;
 
-Examples
-Example 1:
+## Examples
+### Example 1:
 ```yaml
 name: Access Issue Information
 jobs:
@@ -36,7 +40,7 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           # other environment variables
 ```
-Example 2:
+### Example 2:
 ```yaml
 name: Access Issue Information
 jobs:
@@ -48,6 +52,55 @@ jobs:
         run: |
             echo "Issue Number: ${ISSUE_NUMBER}"
 ```
+
+Solution:
+```yaml
+name: Access Issue Information
+
+on:
+  issues:
+    types: [opened, reopened]   # Trigger when a new issue is opened or reopened
+
+jobs:
+  access_issue_info:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Print issue details
+      - name: Print Issue Information
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_ASSIGNEES: ${{ join(github.event.issue.assignees.*.login, ', ') }}
+          ISSUE_LABELS: ${{ join(github.event.issue.labels.*.name, ', ') }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          echo "=== Issue Information ==="
+          echo "Issue Number: ${ISSUE_NUMBER}"
+          echo "Issue Title: ${ISSUE_TITLE}"
+          echo "Issue Body: ${ISSUE_BODY}"
+          echo "Issue Assignees: ${ISSUE_ASSIGNEES}"
+          echo "Issue Labels: ${ISSUE_LABELS}"
+          echo "Repository: ${REPOSITORY}"
+
+      # Step 3: Optional — Retrieve issue details via GitHub API
+      - name: Retrieve Issue Details via GitHub API
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          echo "Fetching issue details from GitHub API..."
+          ISSUE_RESPONSE=$(curl -s https://api.github.com/repos/${REPOSITORY}/issues/${ISSUE_NUMBER})
+          echo "Issue Information from API: $ISSUE_RESPONSE"
+```
+
+
+
 ---
 
 ## 🧭 What Is a GitHub “Issue”?
