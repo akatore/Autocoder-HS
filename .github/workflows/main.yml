@@ -12,10 +12,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+      # Objective: Make the script file executable
+      # Note: This assumes your script is named 'gpt_interaction_script.sh'
+      # If you named it 'script.sh', change the filename below.
       - name: Set permissions for script.sh
         run: chmod +x scripts/script.sh
 
+      # Objective: Run the script and pass the necessary environment variables
       - name: Run the script to generate code
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -24,13 +27,21 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: ./scripts/script.sh "${GITHUB_TOKEN}" "${REPOSITORY}" "${ISSUE_NUMBER}" "${OPENAI_API_KEY}"
 
+      # Objective: Upload the content as an artifact
       - name: Upload autocoder output
         uses: actions/upload-artifact@v4
         with:
           name: autocoder-artifact
           path: autocoder-bot/
-
+          
+      # Objective: Download the artifact
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: autocoder-artifact
+          path: autocoder-artifact/  # Download to this directory
       - name: Display generated files
         run: ls -R autocoder-bot
+
 
 
