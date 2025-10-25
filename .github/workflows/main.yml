@@ -17,6 +17,9 @@ jobs:
       - name: Give execute permission to script
         run: chmod +x ./script.sh
 
+      - name: Give execute permission to script
+        run: chmod +x script.sh
+
       - name: Generate code using ChatGPT
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
@@ -40,6 +43,7 @@ jobs:
 
       - name: Display generated files
         run: ls -R autocoder-artifact
+
 
 
 
