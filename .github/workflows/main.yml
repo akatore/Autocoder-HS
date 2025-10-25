@@ -18,16 +18,22 @@ jobs:
       #   run: chmod +x script.sh
         
       - name: Give execute permission to script
-        run: chmod +x ./script.sh
+        run: chmod +x script.sh
 
       - name: Generate code using ChatGPT
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPOSITORY: ${{ github.repository }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          ./script.sh "${GITHUB_TOKEN}" "${REPOSITORY}" "${ISSUE_NUMBER}" "${OPENAI_API_KEY}"
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #   REPOSITORY: ${{ github.repository }}
+        #   ISSUE_NUMBER: ${{ github.event.issue.number }}
+        #   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        # run: |
+        #   ./script.sh "${GITHUB_TOKEN}" "${REPOSITORY}" "${ISSUE_NUMBER}" "${OPENAI_API_KEY}"
+
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUM: ${{ github.event.issue.number }}
+          OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: ./gpt_interaction_script.sh "$GH_TOKEN" "$REPO" "$ISSUE_NUM" "$OPENAI_KEY"
 
       - name: Upload autocoder output
         uses: actions/upload-artifact@v4
@@ -43,6 +49,7 @@ jobs:
 
       - name: Display generated files
         run: ls -R autocoder-artifact
+
 
 
 
