@@ -31,6 +31,9 @@ outputs:
 runs:
   using: 'composite'
   steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
     # Step 1: Greet users
     - name: Greet Users
       run: echo "Hello! AutoCoder is processing your issue..."
