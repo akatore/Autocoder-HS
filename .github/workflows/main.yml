@@ -1,42 +1,10 @@
-name: Access Issue Information
-
-on:
-  issues:
-    types: [opened, reopened]   # Trigger when a new issue is opened or reopened
-
+name: say_hello
+on: [push]
 jobs:
-  access_issue_info:
+  say_hello:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Checkout the repository
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v4
-
-      # Step 2: Print issue details
-      - name: Print Issue Information
-        env:
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          ISSUE_TITLE: ${{ github.event.issue.title }}
-          ISSUE_BODY: ${{ github.event.issue.body }}
-          ISSUE_ASSIGNEES: ${{ join(github.event.issue.assignees.*.login, ', ') }}
-          ISSUE_LABELS: ${{ join(github.event.issue.labels.*.name, ', ') }}
-          REPOSITORY: ${{ github.repository }}
-        run: |
-          echo "=== Issue Information ==="
-          echo "Issue Number: ${ISSUE_NUMBER}"
-          echo "Issue Title: ${ISSUE_TITLE}"
-          echo "Issue Body: ${ISSUE_BODY}"
-          echo "Issue Assignees: ${ISSUE_ASSIGNEES}"
-          echo "Issue Labels: ${ISSUE_LABELS}"
-          echo "Repository: ${REPOSITORY}"
-
-      # Step 3: Optional — Retrieve issue details via GitHub API
-      - name: Retrieve Issue Details via GitHub API
-        env:
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          REPOSITORY: ${{ github.repository }}
-        run: |
-          echo "Fetching issue details from GitHub API..."
-          ISSUE_RESPONSE=$(curl -s https://api.github.com/repos/${REPOSITORY}/issues/${ISSUE_NUMBER})
-          echo "Issue Information from API: $ISSUE_RESPONSE"
+      - name: Greeting Message
+        run: echo "Hello, world"
