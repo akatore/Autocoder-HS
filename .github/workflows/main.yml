@@ -14,9 +14,10 @@ jobs:
       - name: AutoCoder Composite Action
         uses: skatore/Autocoder-Hs@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           openai_api_key: ${{ secrets.OPENAI_API_KEY }}
           repository: ${{ github.repository }}
           issue_number: ${{ github.event.issue.number }}
           issue_label: 'autocoder-bot'
           script_path: './scripts/script.sh'
+
