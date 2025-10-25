@@ -1,42 +1,54 @@
-name: Access Issue Information
+name: Autocoder Bot
 
+# Run this workflow when an issue is opened or edited
 on:
   issues:
-    types: [opened, reopened]   # Trigger when a new issue is opened or reopened
+    types: [opened, edited]
 
 jobs:
-  access_issue_info:
+  generate-code:
+    # Objective: Run only if the issue has the 'autocoder-bot' label
+    if: contains(github.event.issue.labels.*.name, 'autocoder-bot')
+    
     runs-on: ubuntu-latest
-
+    
     steps:
-      # Step 1: Checkout the repository
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Print issue details
-      - name: Print Issue Information
-        env:
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          ISSUE_TITLE: ${{ github.event.issue.title }}
-          ISSUE_BODY: ${{ github.event.issue.body }}
-          ISSUE_ASSIGNEES: ${{ join(github.event.issue.assignees.*.login, ', ') }}
-          ISSUE_LABELS: ${{ join(github.event.issue.labels.*.name, ', ') }}
-          REPOSITORY: ${{ github.repository }}
-        run: |
-          echo "=== Issue Information ==="
-          echo "Issue Number: ${ISSUE_NUMBER}"
-          echo "Issue Title: ${ISSUE_TITLE}"
-          echo "Issue Body: ${ISSUE_BODY}"
-          echo "Issue Assignees: ${ISSUE_ASSIGNEES}"
-          echo "Issue Labels: ${ISSUE_LABELS}"
-          echo "Repository: ${REPOSITORY}"
+      # Objective: Make the script file executable
+      # Note: This assumes your script is named 'gpt_interaction_script.sh'
+      # If you named it 'script.sh', change the filename below.
+      - name: Set permissions for script.sh
+        run: chmod +x ./gpt_interaction_script.sh
 
-      # Step 3: Optional — Retrieve issue details via GitHub API
-      - name: Retrieve Issue Details via GitHub API
+      # Objective: Run the script and pass the necessary environment variables
+      - name: Run script.sh
         env:
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          REPOSITORY: ${{ github.repository }}
-        run: |
-          echo "Fetching issue details from GitHub API..."
-          ISSUE_RESPONSE=$(curl -s https://api.github.com/repos/${REPOSITORY}/issues/${ISSUE_NUMBER})
-          echo "Issue Information from API: $ISSUE_RESPONSE"
+          # Arg 1: GITHUB_TOKEN
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Arg 2: REPOSITORY
+          REPO: ${{ github.repository }}
+          # Arg 3: ISSUE_NUMBER
+          ISSUE_NUM: ${{ github.event.issue.number }}
+          # Arg 4: OPENAI_API_KEY
+          OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: ./gpt_interaction_script.sh "$GH_TOKEN" "$REPO" "$ISSUE_NUM" "$OPENAI_KEY"
+
+      # Objective: Upload the content as an artifact
+      - name: Upload generated files as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: autocoder-artifact
+          path: autocoder-bot/  # The script saves files to this directory
+
+      # Objective: Download the artifact
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: autocoder-artifact
+          path: autocoder-artifact/  # Download to this directory
+
+      # Objective: List all files recursively
+      - name: List files in the artifact
+        run: ls -R autocoder-artifact/
