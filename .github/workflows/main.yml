@@ -14,8 +14,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Give execute permission to script
-        run: chmod +x script.sh
+      # - name: Give execute permission to script
+      #   run: chmod +x script.sh
         
       - name: Give execute permission to script
         run: chmod +x ./script.sh
@@ -43,6 +43,7 @@ jobs:
 
       - name: Display generated files
         run: ls -R autocoder-artifact
+
 
 
 
