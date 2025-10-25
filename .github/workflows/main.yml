@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: AutoCoder Composite Action
-        uses: skatore/Autocoder-Hs@v1
+        uses: akatore/Autocoder-HS@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           openai_api_key: ${{ secrets.OPENAI_API_KEY }}
@@ -20,4 +20,5 @@ jobs:
           issue_number: ${{ github.event.issue.number }}
           issue_label: 'autocoder-bot'
           script_path: './scripts/script.sh'
+
 
