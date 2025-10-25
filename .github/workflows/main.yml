@@ -34,7 +34,7 @@ jobs:
           REPO: ${{ github.repository }}
           ISSUE_NUM: ${{ github.event.issue.number }}
           OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: ./scripts/script.sh.sh "$GH_TOKEN" "$REPO" "$ISSUE_NUM" "$OPENAI_KEY"
+        run: ./scripts/script.sh "$GH_TOKEN" "$REPO" "$ISSUE_NUM" "$OPENAI_KEY"
 
       # Objective: Configure git user
       - name: Configure git
@@ -68,5 +68,6 @@ jobs:
           
           # Labels for the PR
           labels: autocoder-bot
+
 
 
