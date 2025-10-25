@@ -6,17 +6,17 @@ inputs:
   GITHUB_TOKEN:
     description: 'Personal access token (PAT) for GitHub API authentication to create PRs and interact with repository.'
     required: true
-  openai_api_key:
+  OPENAI_API_KEY:
     description: 'API key for OpenAI to generate code from issue content.'
     required: true
   script_path:
     description: 'Path to the script that interacts with ChatGPT and generates code.'
     required: true
     default: './scripts/script.sh'
-  issue_number:
+  ISSUE_NUMBER:
     description: 'The GitHub issue number that triggered the action.'
     required: true
-  repository:
+  REPOSITORY:
     description: 'Repository where the action is executed.'
     required: true
   issue_label:
