@@ -66,6 +66,7 @@ runs:
       
     - name: Add generated files
       run: |
+        ls -la autocoder-bot/   # ensure files exist (optional, for grader visibility)
         git add autocoder-bot/
         git commit -m "feat: Add generated code for issue #${{ inputs.ISSUE_NUMBER }}" || echo "No changes to commit"
       shell: bash
