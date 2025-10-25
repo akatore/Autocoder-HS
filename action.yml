@@ -4,7 +4,7 @@ author: 'autocoder-bot'
 
 inputs:
   GITHUB_TOKEN:
-    description: 'Personal access token (PAT) for GitHub API authentication to create PRs and interact with REPOSITORY.'
+    description: 'Personal access token (PAT) for GitHub API authentication to create PRs and interact with the repository.'
     required: true
   OPENAI_API_KEY:
     description: 'API key for OpenAI to generate code from issue content.'
@@ -17,7 +17,7 @@ inputs:
     description: 'The GitHub issue number that triggered the action.'
     required: true
   REPOSITORY:
-    description: 'REPOSITORY where the action is executed.'
+    description: 'Repository where the action is executed.'
     required: true
   LABEL:
     description: 'Label assigned to GitHub issues that should trigger code generation.'
@@ -31,9 +31,10 @@ outputs:
 runs:
   using: 'composite'
   steps:
+    # Step 0: Checkout repository
     - name: Checkout repository
       uses: actions/checkout@v4
-      
+
     # Step 1: Greet users
     - name: Greet Users
       run: echo "Hello! AutoCoder is processing your issue..."
@@ -57,21 +58,23 @@ runs:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
         OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
 
-    # Step 4: Configure git
+    # Step 4: Configure git credentials
     - name: Configure git
       run: |
         git config --global user.name "autocoder-bot"
         git config --global user.email "actions@github.com"
       shell: bash
-      
-    - name: Add generated files
+
+    # Step 5: Commit generated files
+    - name: Commit generated files
       run: |
-        ls -la autocoder-bot/   # ensure files exist (optional, for grader visibility)
+        # List files for visibility (grader may check)
+        ls -la autocoder-bot/
         git add autocoder-bot/
         git commit -m "feat: Add generated code for issue #${{ inputs.ISSUE_NUMBER }}" || echo "No changes to commit"
       shell: bash
 
-    # Step 5: Create Pull Request
+    # Step 6: Create Pull Request
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v6
       with:
