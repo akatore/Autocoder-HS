@@ -6,7 +6,6 @@ on:
 
 jobs:
   generate_code:
-    # if: contains(join(github.event.issue.labels.*.name, ','), 'autocoder-bot')
     if: contains(github.event.issue.labels.*.name, 'autocoder-bot')
     runs-on: ubuntu-latest
 
@@ -14,33 +13,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Give execute permission to script
+      - name: Make the script file executable
         run: chmod +x script.sh
 
-      - name: Give execute permission to script
-        run: chmod +x ./script.sh
-
-      - name: Generate code using ChatGPT
+      - name: Run the script to generate code
         env:
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          ./script.sh "${ISSUE_NUMBER}" "${REPOSITORY}" "${GITHUB_TOKEN}" "${OPENAI_API_KEY}"
+        run: ./script.sh "${GITHUB_TOKEN}" "${REPOSITORY}" "${ISSUE_NUMBER}" "${OPENAI_API_KEY}"
+
       - name: Upload autocoder output
         uses: actions/upload-artifact@v4
         with:
           name: autocoder-artifact
           path: autocoder-bot/
 
-      - name: Download autocoder artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: autocoder-artifact
-          path: autocoder-artifact/
-
       - name: Display generated files
-        run: ls -R autocoder-artifact
-
-
+        run: ls -R autocoder-bot
