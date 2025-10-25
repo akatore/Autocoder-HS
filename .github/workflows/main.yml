@@ -1,10 +1,31 @@
-name: say_hello
-on: [push]
+name: Access Issue Information
+
+# 1. Modify the workflow to trigger when a new issue is opened or reopened
+on:
+  issues:
+    types: [opened, reopened]
+
 jobs:
-  say_hello:
+  access_issue_info:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      # 2. Checkout the repository
+      - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Greeting Message
-        run: echo "Hello, world"
+
+      # 3. Set environment variables and 4. Echo the content
+      - name: Print Issue Information
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_ASSIGNEES: ${{ join(github.event.issue.assignees.*.login, ', ') }}
+          ISSUE_LABELS: ${{ join(github.event.issue.labels.*.name, ', ') }}
+        run: |
+          echo "Issue Number: $ISSUE_NUMBER"
+          echo "Issue Title: $ISSUE_TITLE"
+          echo "Issue Assignees: $ISSUE_ASSIGNEES"
+          echo "Issue Labels: $ISSUE_LABELS"
+          echo "--- Issue Body Start ---"
+          echo "$ISSUE_BODY"
+          echo "--- Issue Body End ---"
