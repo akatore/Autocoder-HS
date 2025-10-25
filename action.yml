@@ -3,7 +3,7 @@ description: 'Generates code from GitHub issues using OpenAI ChatGPT and creates
 author: 'autocoder-bot'
 
 inputs:
-  github_token:
+  GITHUB_TOKEN:
     description: 'Personal access token (PAT) for GitHub API authentication to create PRs and interact with repository.'
     required: true
   openai_api_key:
