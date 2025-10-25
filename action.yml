@@ -32,15 +32,15 @@ runs:
   steps:
     # This step makes the script (part of this action's repo) executable
     - name: Set permissions for script.sh
-      run: chmod +x ${{ github.action_path }}/gpt_interaction_script.sh
+      run: chmod +x ${{ github.action_path }}/scripts/script.sh
       shell: bash
 
     # This step runs the script, passing in inputs and event data
     - name: Run script.sh
-      run: ${{ github.action_path }}/gpt_interaction_script.sh "$GH_TOKEN" "$REPO" "$ISSUE_NUM" "$OPENAI_KEY"
+      run: ${{ github.action_path }}/scripts/script.sh "$GITHUB_TOKEN" "$REPO" "$ISSUE_NUM" "$OPENAI_KEY"
       shell: bash
       env:
-        GH_TOKEN: ${{ inputs.github_token }}
+        GITHUB_TOKEN: ${{ inputs.github_token }}
         REPO: ${{ github.repository }}
         ISSUE_NUM: ${{ github.event.issue.number }}
         OPENAI_KEY: ${{ inputs.openai_api_key }}
