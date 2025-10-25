@@ -3,7 +3,7 @@ name: Autocoder Bot
 # Run this workflow when an issue is opened or edited
 on:
   issues:
-    types: [opened, edited]
+    types: [opened, reopened, labeled]
 
 # Objective: Add write permissions for contents (to push branch) and PRs
 permissions:
@@ -68,3 +68,4 @@ jobs:
           
           # Labels for the PR
           labels: autocoder-bot
+
