@@ -18,8 +18,9 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           REPOSITORY: ${{ github.repository }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          issue_label: 'autocoder-bot'
+          LABEL: 'autocoder-bot'
           SCRIPT_PATH: './scripts/script.sh'
+
 
 
 
