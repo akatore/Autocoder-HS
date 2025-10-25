@@ -63,6 +63,12 @@ runs:
         git config --global user.name "autocoder-bot"
         git config --global user.email "actions@github.com"
       shell: bash
+      
+    - name: Add generated files
+      run: |
+        git add autocoder-bot/
+        git commit -m "feat: Add generated code for issue #${{ inputs.ISSUE_NUMBER }}" || echo "No changes to commit"
+      
 
     # Step 5: Create Pull Request
     - name: Create Pull Request
