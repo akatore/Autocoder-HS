@@ -21,7 +21,7 @@ This action automates generating code from GitHub issues using OpenAI's API and 
 To use this action, create a workflow file (e.g., `.github/workflows/autocoder.yml`) in your repository:
 
 ```yaml
-name: 'Run Autocoder Bot'
+name: 'AutoCoder'
 
 on:
   issues:
@@ -107,4 +107,5 @@ Before you publish, you should test it.
 
 5.  **Publish (Final Step):**
     Once you see it working, you can **create a release** on GitHub (e.g., `v1.0.0`). This "publishes" your action so others can use it by referencing the tag (like `uses: Your-Username/Your-Repo-Name@v1.0.0`).
+
 
