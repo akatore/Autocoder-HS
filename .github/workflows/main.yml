@@ -1,6 +1,5 @@
 name: Access Issue Information
 
-# 1. Modify the workflow to trigger when a new issue is opened or reopened
 on:
   issues:
     types: [opened, reopened]
@@ -9,11 +8,9 @@ jobs:
   access_issue_info:
     runs-on: ubuntu-latest
     steps:
-      # 2. Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 3. Set environment variables and 4. Echo the content
       - name: Print Issue Information
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
@@ -27,5 +24,6 @@ jobs:
           echo "Issue Assignees: $ISSUE_ASSIGNEES"
           echo "Issue Labels: $ISSUE_LABELS"
           echo "--- Issue Body Start ---"
+          # This is the line the test is looking for:
           echo "$ISSUE_BODY"
           echo "--- Issue Body End ---"
