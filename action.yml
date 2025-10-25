@@ -51,11 +51,11 @@ runs:
           "${{ inputs.GITHUB_TOKEN }}" \
           "${{ inputs.REPOSITORY }}" \
           "${{ inputs.ISSUE_NUMBER }}" \
-          "${{ inputs.openai_api_key }}"
+          "${{ inputs.OPENAI_API_KEY }}"
       shell: bash
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-        OPENAI_API_KEY: ${{ inputs.openai_api_key }}
+        OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
 
     # Step 4: Configure git
     - name: Configure git
@@ -68,7 +68,7 @@ runs:
       run: |
         git add autocoder-bot/
         git commit -m "feat: Add generated code for issue #${{ inputs.ISSUE_NUMBER }}" || echo "No changes to commit"
-      
+      shell: bash
 
     # Step 5: Create Pull Request
     - name: Create Pull Request
