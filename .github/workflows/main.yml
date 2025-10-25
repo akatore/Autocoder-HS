@@ -3,7 +3,7 @@ name: Autocoder Bot
 # Run this workflow when an issue is opened or edited
 on:
   issues:
-    types: [opened, edited]
+    types: [opened, reopened, labeled]
 
 jobs:
   generate-code:
@@ -52,4 +52,5 @@ jobs:
       # Objective: List all files recursively
       - name: List files in the artifact
         run: ls -R autocoder-artifact/
+
 
